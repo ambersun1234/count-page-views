@@ -1,0 +1,26 @@
+{
+  "name": "count-page-views",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.4.0",
+    "dotenv": "^16.4.5",
+    "eslint": "^9.9.0",
+    "http-status-codes": "^2.3.0",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.1.0"
+  },
+  "dependencies": {
+    "@google-analytics/data": "^4.8.0",
+    "express": "^4.19.2",
+    "node-libcurl": "^4.0.0"
+  }
+}
