@@ -1,26 +1,32 @@
 import winston from "winston";
 
-const logger = winston.createLogger({
-  level: "debug",
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.simple(),
-    winston.format.colorize(),
-    winston.format.printf(({ timestamp, level, message, ...metadata }) => {
-      let msg = `${timestamp} - ${level}: ${message}`;
+import { config } from "../config/config";
 
-      const meta = JSON.stringify(metadata);
-      if (meta !== "{}") {
-        msg += ` - ${meta}`;
-      }
+const CreateLogger = (meta: string): winston.Logger =>
+  winston.createLogger({
+    level: config.logLevel,
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.simple(),
+      winston.format.colorize(),
+      winston.format.printf(({ timestamp, level, message, ...metadata }) => {
+        let msg = `${timestamp} - ${level}: ${message}`;
 
-      return msg;
-    })
-  ),
-  transports: [
-    // new winston.transports.File({ filename: "error.log", level: "error" }),
-    new winston.transports.Console()
-  ]
-});
+        const meta = JSON.stringify(metadata);
+        if (meta !== "{}") {
+          msg += ` - ${meta}`;
+        }
 
-export { logger };
+        return msg;
+      })
+    ),
+    defaultMeta: { service: meta },
+    transports: [
+      // new winston.transports.File({ filename: "error.log", level: "error" }),
+      new winston.transports.Console()
+    ]
+  });
+
+const GlobalLogger = CreateLogger("global");
+
+export { GlobalLogger, CreateLogger };

@@ -1,15 +1,19 @@
 import express from "express";
+import dotenv from "dotenv";
 
 import ViewRoutes from "./routes/views";
-import { LogRequest } from "./middleware/interceptor";
-import { logger } from "./logger/logger";
+import { interceptor } from "./middleware/interceptor";
+import { GlobalLogger } from "./logger/logger";
 import { config } from "./config/config";
+
+dotenv.config();
 
 const app = express();
 
-app.use(LogRequest);
+app.use(interceptor.LogRequest.bind(interceptor));
+app.use(interceptor.ErrorHandle.bind(interceptor));
 app.use("/views", ViewRoutes);
 
 app.listen(config.port, () => {
-  logger.info(`Server is running`, { port: config.port });
+  GlobalLogger.info(`Server is running`, { port: config.port });
 });

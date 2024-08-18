@@ -1,10 +1,15 @@
 import { Router } from "express";
-import { Request, Response } from "express";
+
+import { viewController } from "../controller/controller";
 
 const routes = Router();
 
-routes.get("/", (req: Request, res: Response) => {
-  res.json({ message: "Hello, world!" });
-});
+/* GET /views
+ */
+routes.get("/", viewController.GetViews.bind(viewController));
+
+/* POST /views
+ */
+routes.post("/", viewController.CreateViews.bind(viewController));
 
 export default routes;
