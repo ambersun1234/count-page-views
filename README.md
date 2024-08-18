@@ -29,6 +29,11 @@ copy [.env.example](./.env.example) to `.env` and fill in the following variable
 | GET | `/views` | Get the page view count | `url`: URL of the page |
 | POST | `/views` | Renew page view count for page ||
 
+## Build
+```shell
+$ make build
+```
+
 ## Author
 + [ambersun1234](https://github.com/ambersun1234)
 
