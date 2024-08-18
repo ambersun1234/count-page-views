@@ -11,10 +11,6 @@ module.exports = {
         test: /\.(ts|tsx)$/i,
         exclude: ["/node_modules/"],
         use: ["ts-loader"]
-      },
-      {
-        test: /\.node$/,
-        loader: "node-loader"
       }
     ]
   },
@@ -27,7 +23,7 @@ module.exports = {
         rotateStringArray: true
       },
       ["exclude_bundle.js"]
-    )
+    ),
   ],
   output: {
     filename: "./server.js",

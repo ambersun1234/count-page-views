@@ -7,6 +7,9 @@ style-check:
 style-write:
 	@npx prettier ./**/*.ts --write
 
+dev:
+	@npm run dev
+
 build:
 	@npm run build
 
@@ -18,3 +21,4 @@ docker-build:
 	style-check
 	build
 	docker-build
+	dev

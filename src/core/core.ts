@@ -1,7 +1,7 @@
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
-import { curly } from "node-libcurl";
 import { StatusCodes } from "http-status-codes";
 import winston from "winston";
+import https from "https";
 
 import { config, ServerConfig } from "../config/config";
 import { CreateLogger } from "../logger/logger";
@@ -22,23 +22,38 @@ class GAservice {
     url = url.split("?")[0];
     url = encodeURI(url);
 
-    let redirectedUrl = url;
+    let redirectedUrl = "";
 
     try {
-      const { statusCode, data } = await curly.get(url, {
-        followLocation: true
-      });
+      redirectedUrl = await new Promise<string>((resolve, _reject) => {
+        https.get("https://" + url, (res) => {
+          let body = "";
 
-      // if data contain "http-equiv="refresh", extract the new url
-      if (
-        statusCode === StatusCodes.OK &&
-        data.includes('http-equiv="refresh"')
-      ) {
-        const match = data.match(/url=(.+)">/);
-        if (match) {
-          redirectedUrl = match[1];
-        }
-      }
+          res.on("data", (chunk) => {
+            body += chunk;
+          });
+
+          res.on("end", () => {
+            if (
+              res.statusCode === StatusCodes.OK &&
+              body.includes('http-equiv="refresh"')
+            ) {
+              const match = body.match(/url=(.+)">/);
+              this.logger.warn("Redirected url found", {
+                url,
+                newUrl: match![1]
+              });
+
+              if (match) {
+                redirectedUrl = match[1];
+                resolve(redirectedUrl);
+              }
+            } else {
+              resolve(url);
+            }
+          });
+        });
+      });
     } catch (error) {
       this.logger.error("Error fetching url", { url, error });
     }
@@ -85,6 +100,7 @@ class GAservice {
         if (viewsMap.has(key)) {
           totalViews = viewsMap.get(key) || 0;
         }
+
         viewsMap.set(key, totalViews + views);
       }
     }
