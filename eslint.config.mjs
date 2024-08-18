@@ -7,6 +7,14 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    ignores: [
+      "node_modules/**/*",
+      "dist/**/*",
+      "webpack.config.js",
+      "eslint.config.mjs"
+    ]
+  },
+  {
     rules: {
       "@typescript-eslint/no-unused-vars": [
         "error",
