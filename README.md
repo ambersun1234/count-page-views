@@ -34,6 +34,18 @@ copy [.env.example](./.env.example) to `.env` and fill in the following variable
 $ make build
 ```
 
+## Run
+### Basic
+```shell
+$ make build
+$ node ./dist/server.js
+```
+
+### Docker-Compose
+```shell
+$ docker-compose up -d
+```
+
 ## Author
 + [ambersun1234](https://github.com/ambersun1234)
 
