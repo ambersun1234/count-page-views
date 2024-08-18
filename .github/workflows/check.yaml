@@ -21,4 +21,4 @@ jobs:
       run: make lint
 
     - name: Check
-      run: make check
+      run: make style-check

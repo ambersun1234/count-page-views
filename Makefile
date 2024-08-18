@@ -1,9 +1,12 @@
 lint:
 	@npx eslint .
 
-check:
+style-check:
 	@npx prettier ./**/*.ts --check
+
+style-write:
+	@npx prettier ./**/*.ts --write
 
 .PHONY: 
 	lint 
-	check
+	style-check
