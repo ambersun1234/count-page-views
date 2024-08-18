@@ -10,6 +10,7 @@ copy [.env.example](./.env.example) to `.env` and fill in the following variable
 
 | Name | Description |
 |:--|:--|
+| PORT | Port number of the server |
 | GOOGLE_APPLICATION_CREDENTIALS | Path to the Google Cloud credential file |
 | ID | Google Analytics View ID |
 | DOMAIN | Domain name of the website |
