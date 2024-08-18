@@ -10,7 +10,11 @@ style-write:
 build:
 	@npm run build
 
+docker-build:
+	@docker build -t views-service .
+
 .PHONY: 
 	lint 
 	style-check
 	build
+	docker-build
