@@ -39,10 +39,9 @@ $ make build
 ```
 
 ## Run
-### Basic
+### Standalone
 ```shell
-$ make build
-$ node ./dist/server.js
+$ make dev
 ```
 
 ### Docker-Compose
