@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 
 import ViewRoutes from "./routes/views";
 import { interceptor } from "./middleware/interceptor";
@@ -10,6 +11,11 @@ dotenv.config();
 
 const app = express();
 
+app.use(
+  cors({
+    origin: config.cors
+  })
+);
 app.use(interceptor.LogRequest.bind(interceptor));
 app.use(interceptor.ErrorHandle.bind(interceptor));
 app.use("/views", ViewRoutes);

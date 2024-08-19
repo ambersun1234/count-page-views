@@ -5,6 +5,7 @@ dotenv.config();
 type ServerConfig = {
   port: number;
   logLevel: string;
+  cors: string[];
   redis: string;
   credentialPath: string;
   reportId: string;
@@ -15,9 +16,13 @@ type ServerConfig = {
 const config = ReadConfig();
 
 function ReadConfig(): ServerConfig {
+  const corsList = process.env.CORS || "";
+  const cors = corsList.split(",").map((item) => item.trim());
+
   return {
     port: Number(process.env.PORT) || 8888,
     logLevel: process.env.LOG_LEVEL || "info",
+    cors: cors,
     redis: process.env.REDIS || "",
     credentialPath: process.env.GOOGLE_APPLICATION_CREDENTIALS || "",
     reportId: process.env.ID || "",

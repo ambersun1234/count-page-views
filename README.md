@@ -17,6 +17,7 @@ copy [.env.example](./.env.example) to `.env` and fill in the following variable
 |:--|:--|
 | PORT | Port number of the server |
 | LOG_LEVEL | Log level of the server |
+| CORS | Allow origin url for CORS |
 | REDIS | Redis connection string |
 | GOOGLE_APPLICATION_CREDENTIALS | Path to the Google Cloud credential file |
 | ID | Google Analytics View ID |
