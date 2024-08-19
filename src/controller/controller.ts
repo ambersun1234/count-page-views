@@ -38,6 +38,8 @@ class ViewController {
       return;
     }
 
+    this.logger.info("Views found in cache", { key, views });
+
     res.json({ views: parseInt(views) });
   }
 
@@ -53,6 +55,8 @@ class ViewController {
     for (const [url, views] of viewMap) {
       await this.cache.set(url, views);
     }
+
+    this.logger.info("Views created", { total: viewMap.size });
 
     res.json({ message: "Views created" });
   }
