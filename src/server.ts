@@ -22,4 +22,5 @@ app.use("/views", ViewRoutes);
 
 app.listen(config.port, () => {
   GlobalLogger.info(`Server is running`, { port: config.port });
+  GlobalLogger.debug(`CORS enable for ${config.cors}`);
 });
