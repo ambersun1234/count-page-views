@@ -33,7 +33,7 @@ class ViewController {
 
     const views = await this.cache.get(key as string);
     if (!views) {
-      this.logger.info("Views not found in cache", { key });
+      this.logger.error("Views not found in cache", { key });
       res.status(StatusCodes.NOT_FOUND).json({ error: "Views not found" });
       return;
     }
