@@ -40,6 +40,7 @@ class ViewController {
 
     this.logger.info("Views found in cache", { key, views });
 
+    res.setHeader("Cache-Control", "public, max-age=86400");
     res.json({ views: parseInt(views) });
   }
 

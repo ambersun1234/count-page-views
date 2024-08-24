@@ -7,6 +7,7 @@ The tool is build to integrate with **static page** by default, specifically Git
 ## Features
 + Aggregate page view count (include redirect URL)
 + Cache page view count with Redis to prevent API rate limit
+    + The http response is also cached to prevent unnecessary API call, default to `1 day`(since the view count is not updated frequently by the Google Analytics)
 + Easy deployment with Kubernetes(Helm Chart), Docker-Compose, or standalone
 
 ## Prerequisites
