@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: views-deployment
+  labels:
+    app: views-app
+spec:
+  selector:
+    matchLabels:
+      app: views-app
+  template:
+    metadata:
+      labels:
+        app: views-app
+    spec:
+      volumes:
+        - name: credential
+          configMap:
+            name: views-config
+            items:
+              - key: credential.json
+                path: credential.json
+      initContainers:
+        - name: redis-stabilized
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              'until nc -z redis-service 6379; do echo $(date "+%Y-%m-%d %H:%M:%S") waiting...; sleep 1; done;'
+            ]
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+      containers:
+        - name: views
+          image: views-service:latest
+          ports:
+            - containerPort: 8888
+          imagePullPolicy: "IfNotPresent"
+          volumeMounts:
+            - name: credential
+              mountPath: "/credential.json"
+              subPath: credential.json
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: views-config
+                  key: port
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: views-config
+                  key: log_level
+            - name: CORS
+              valueFrom:
+                configMapKeyRef:
+                  name: views-config
+                  key: cors
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/credential.json"
+            - name: DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: views-config
+                  key: domain
+            - name: START_DATE
+              valueFrom:
+                configMapKeyRef:
+                  name: views-config
+                  key: start_date
+            - name: REDIS
+              valueFrom:
+                secretKeyRef:
+                  name: views-credential
+                  key: redis
+            - name: ID
+              valueFrom:
+                secretKeyRef:
+                  name: views-credential
+                  key: id
+          resources:
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: views-service
+spec:
+  selector:
+    app: views-app
+  ports:
+    - protocol: TCP
+      port: 8888
+  type: LoadBalancer
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: views-config
+data:
+  domain: YOUR_DOMAIN
+  start_date: "2022-08-31"
+  log_level: debug
+  port: "8888"
+  cors: "*"
+  credential.json: |
+    {
+      "your_credentials": "your_credentials"
+    }
+  
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: views-credential
+type: Opaque
+data:
+  redis: cmVkaXM6Ly9yZWRpcy1zZXJ2aWNlOjYzNzk= #(redis://redis-service:6379)
+  id: MzMwNDEzNzcy #(330413772)

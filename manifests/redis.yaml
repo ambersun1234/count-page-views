@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: views-redis
+spec:
+  selector:
+    matchLabels:
+      app: views-redis
+  template:
+    metadata:
+      labels:
+        app: views-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis
+          ports:
+            - containerPort: 6379
+          resources:
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: views-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+  type: ClusterIP

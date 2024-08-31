@@ -1,0 +1,17 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: count-page-views
+build:
+  local:
+    push: false
+  artifacts:
+    - image: views-service
+      docker:
+        dockerfile: Dockerfile
+manifests:
+  rawYaml:
+    - manifests/redis.yaml
+    - manifests/views.yaml
+deploy:
+  kubeContext: k3d-views-k3d

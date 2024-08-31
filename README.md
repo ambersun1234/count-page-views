@@ -51,6 +51,20 @@ $ docker-compose build --no-cache
 $ docker-compose up -d
 ```
 
+### Kubernetes
+```shell
+$ make docker-build
+$ make k3d-create
+$ make k3d-import
+$ make k3d-apply
+```
+
+#### Skaffold
+```shell
+$ make k3d-create
+$ make skaffold-dev
+```
+
 ## How to Use
 As per introduction, this tool is designed to integrate with static page, specifically GitHub pages. So the following steps are based on it(Jekyll).
 
