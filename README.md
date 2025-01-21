@@ -59,6 +59,14 @@ $ make k3d-import
 $ make k3d-apply
 ```
 
+### Helm
+```shell
+$ make docker-build
+$ make k3d-create
+$ make k3d-import
+$ helm install cpv charts/cpv
+```
+
 #### Skaffold
 ```shell
 $ make k3d-create

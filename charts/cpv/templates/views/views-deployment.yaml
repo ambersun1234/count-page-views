@@ -1,0 +1,85 @@
+{{- if .Values.views.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: views-deployment
+  labels:
+    app: views-app
+spec:
+  selector:
+    matchLabels:
+      app: views-app
+  template:
+    metadata:
+      labels:
+        app: views-app
+    spec:
+      volumes:
+        - name: credential
+          secret:
+            secretName: views-credential
+      initContainers:
+        - name: redis-stabilized
+          image: redis:latest
+          command:
+            [
+              "sh",
+              "-c",
+              'until redis-cli -h redis-master.default.svc.cluster.local ping; do echo $(date "+%Y-%m-%d %H:%M:%S") waiting...; sleep 1; done;'
+            ]
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+      containers:
+        - name: views
+          image: views-service:latest
+          ports:
+            - containerPort: {{ .Values.views.port }}
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: credential
+              mountPath: "/etc/credential"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: views-config
+                  key: port
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: views-config
+                  key: log_level
+            - name: CORS
+              valueFrom:
+                configMapKeyRef:
+                  name: views-config
+                  key: cors
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/etc/credential/credential.json"
+            - name: DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: views-config
+                  key: domain
+            - name: START_DATE
+              valueFrom:
+                configMapKeyRef:
+                  name: views-config
+                  key: start_date
+            - name: REDIS
+              valueFrom:
+                secretKeyRef:
+                  name: views-credential
+                  key: redis
+            - name: ID
+              valueFrom:
+                secretKeyRef:
+                  name: views-credential
+                  key: id
+          resources:
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
+{{- end }}

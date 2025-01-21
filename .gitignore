@@ -1,3 +1,5 @@
 node_modules
 .env
 dist
+Chart.lock
+charts/cpv/charts

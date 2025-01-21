@@ -1,0 +1,13 @@
+{{- if .Values.views.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: views-service
+spec:
+  selector:
+    app: views-app
+  ports:
+    - protocol: TCP
+      port: {{ .Values.views.port }}
+  type: LoadBalancer
+{{- end }}

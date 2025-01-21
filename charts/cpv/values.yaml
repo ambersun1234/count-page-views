@@ -1,0 +1,26 @@
+redis:
+  enabled: true
+  
+  fullnameOverride: redis
+
+  replica:
+    replicaCount: 1
+
+  auth:
+    enabled: false
+
+views:
+  enabled: true
+
+  fullnameOverride: views
+
+  port: 8888
+
+  log:
+    level: debug
+
+  settings:
+    domain: ambersun1234.github.io
+    startDate: "2022-08-31"
+    id: '330413772'
+    cors: '*,http://0.0.0.0:4000'
