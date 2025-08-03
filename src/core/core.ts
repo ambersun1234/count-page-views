@@ -87,6 +87,8 @@ class GAservice {
       ]
     });
 
+    let siteViews = 0
+
     const viewsMap = new Map<string, number>();
     if (response.rows) {
       for (const row of response.rows) {
@@ -102,8 +104,11 @@ class GAservice {
         }
 
         viewsMap.set(key, totalViews + views);
+        siteViews += views + totalViews;
       }
     }
+
+    this.logger.info("Total site views", { siteViews });
 
     return viewsMap;
   }
