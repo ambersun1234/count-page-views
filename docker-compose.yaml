@@ -4,6 +4,7 @@ services:
   redis-service:
     image: redis:alpine
     container_name: redis
+    restart: always
     ports:
       - "6379:6379"
     networks:
@@ -15,6 +16,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: views-service
+    restart: always
     ports:
       - "8888:8888"
     volumes:
