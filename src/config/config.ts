@@ -9,15 +9,13 @@ type ServerConfig = {
   redis: string;
   credentialPath: string;
   reportId: string;
-  domain: string;
   startDate: string;
 };
 
 const config = ReadConfig();
 
 function ReadConfig(): ServerConfig {
-  const corsList = process.env.CORS || "";
-  const cors = corsList.split(",").map((item) => item.trim());
+  const cors = (process.env.CORS || "").split(",").map((item) => item.trim());
 
   return {
     port: Number(process.env.PORT) || 8888,
@@ -26,7 +24,6 @@ function ReadConfig(): ServerConfig {
     redis: process.env.REDIS || "",
     credentialPath: process.env.GOOGLE_APPLICATION_CREDENTIALS || "",
     reportId: process.env.ID || "",
-    domain: process.env.DOMAIN || "",
     startDate: process.env.START_DATE || ""
   };
 }

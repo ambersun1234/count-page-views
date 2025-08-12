@@ -1,7 +1,5 @@
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
-import { StatusCodes } from "http-status-codes";
 import winston from "winston";
-import https from "https";
 
 import { config, ServerConfig } from "../config/config";
 import { CreateLogger } from "../logger/logger";
@@ -17,53 +15,6 @@ class GAservice {
     this.gaClient = new BetaAnalyticsDataClient();
   }
 
-  async GetUrl(url: string): Promise<string> {
-    // remove query params from the url
-    url = url.split("?")[0];
-    url = encodeURI(url);
-
-    let redirectedUrl = "";
-
-    try {
-      redirectedUrl = await new Promise<string>((resolve, _reject) => {
-        https.get("https://" + url, (res) => {
-          let body = "";
-
-          res.on("data", (chunk) => {
-            body += chunk;
-          });
-
-          res.on("end", () => {
-            if (
-              res.statusCode === StatusCodes.OK &&
-              body.includes('http-equiv="refresh"')
-            ) {
-              const match = body.match(/url=(.+)">/);
-              this.logger.warn("Redirected url found", {
-                url,
-                newUrl: match![1]
-              });
-
-              if (match) {
-                redirectedUrl = match[1];
-                resolve(redirectedUrl);
-              }
-            } else {
-              resolve(url);
-            }
-          });
-        });
-      });
-    } catch (error) {
-      this.logger.error("Error fetching url", { url, error });
-    }
-
-    return redirectedUrl
-      .replace(this.config.domain!, "")
-      .replace("https://", "")
-      .replace("http://", "");
-  }
-
   async RunReport(): Promise<Map<string, number>> {
     this.logger.info("Fetching report data from Google Analytics");
 
@@ -77,7 +28,7 @@ class GAservice {
       ],
       dimensions: [
         {
-          name: "fullPageUrl"
+          name: "pagePath"
         }
       ],
       metrics: [
@@ -90,8 +41,7 @@ class GAservice {
     const viewsMap = new Map<string, number>();
     if (response.rows) {
       for (const row of response.rows) {
-        // test url needs to be redirect or not
-        const key = await this.GetUrl(row.dimensionValues![0].value!);
+        const key = row.dimensionValues![0].value!
 
         // convert the views to a number
         const views = parseInt(row.metricValues![0].value!, 10);
